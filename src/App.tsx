@@ -394,24 +394,24 @@ function App() {
         <div className="canvas-wrap">
           <canvas
             ref={canvasRef}
-            aria-label="シュワルツシルト時空で動く時計のシミュレーション"
+            aria-label="Schwarzschild clock simulation"
           />
         </div>
         <div className="status-strip">
           <div>
-            <span>時計数</span>
+            <span>Clocks</span>
             <strong>{clocks.length}</strong>
           </div>
           <div>
-            <span>平均 dτ/dt</span>
+            <span>Avg dτ/dt</span>
             <strong>{meanRate.toFixed(4)}</strong>
           </div>
           <div>
-            <span>遠方時刻 t</span>
+            <span>t∞</span>
             <strong>{formatTime(coordinateTime)}</strong>
           </div>
         </div>
-        <div className="clock-dock" aria-label="各時計の速度コントローラー">
+        <div className="clock-dock" aria-label="Clock velocity controls">
           {clocks.map((clock) => (
             <article
               className="clock-card"
@@ -423,14 +423,14 @@ function App() {
                 <strong>{clock.name}</strong>
                 <small>
                   {coordinateTime > 0
-                    ? `${Math.max(0, ((coordinateTime - clock.state.tau) / coordinateTime) * 100).toFixed(2)}% 遅れ`
+                    ? `${Math.max(0, ((coordinateTime - clock.state.tau) / coordinateTime) * 100).toFixed(2)}% lag`
                     : clock.mode === "paused"
-                      ? "停止"
+                      ? "idle"
                       : clock.mode}
                 </small>
               </header>
               <label>
-                <span>半径方向速度 dr/dt</span>
+                <span>vᵣ</span>
                 <input
                   type="range"
                   min={-0.65}
@@ -444,7 +444,7 @@ function App() {
                 <output>{clock.radialVelocity.toFixed(2)}</output>
               </label>
               <label>
-                <span>接線方向速度 r dφ/dt</span>
+                <span>vφ</span>
                 <input
                   type="range"
                   min={-0.65}
@@ -464,30 +464,29 @@ function App() {
 
       <aside className="control-panel">
         <header>
-          <p>Schwarzschild Clock Lab</p>
-          <h1>重力で遅れる時計</h1>
+          <h1>Clock Lab</h1>
         </header>
 
-        <div className="toolbar" aria-label="シミュレーション操作">
+        <div className="toolbar" aria-label="Simulation controls">
           <button
             type="button"
             className="icon-button primary"
             onClick={toggleRunning}
-            aria-label={running ? "一時停止" : "再生"}
-            title={running ? "一時停止" : "再生"}
+            aria-label={running ? "Pause" : "Play"}
+            title={running ? "Pause" : "Play"}
           >
             {running ? <Pause size={20} /> : <Play size={20} />}
           </button>
-          <button type="button" className="icon-button" onClick={addClock} aria-label="時計を追加" title="時計を追加">
+          <button type="button" className="icon-button" onClick={addClock} aria-label="Add clock" title="Add clock">
             <Plus size={20} />
           </button>
-          <button type="button" className="icon-button" onClick={startFreefall} aria-label="全時計を自由落下" title="全時計を自由落下">
+          <button type="button" className="icon-button" onClick={startFreefall} aria-label="Free fall" title="Free fall">
             <SkipForward size={20} />
           </button>
-          <button type="button" className="icon-button" onClick={togglePinned} aria-label="全時計を固定" title="全時計を固定">
+          <button type="button" className="icon-button" onClick={togglePinned} aria-label="Pin" title="Pin">
             <Pin size={20} fill={clocks.every((clock) => clock.mode === "pinned") ? "currentColor" : "none"} />
           </button>
-          <button type="button" className="icon-button" onClick={reset} aria-label="リセット" title="リセット">
+          <button type="button" className="icon-button" onClick={reset} aria-label="Reset" title="Reset">
             <RotateCcw size={20} />
           </button>
         </div>
@@ -495,12 +494,12 @@ function App() {
         <div className="mode-readout">
           <span className={`mode-dot ${running ? "freefall" : "paused"}`} />
           <strong>
-            {running ? "シミュレーション実行中" : "シミュレーション停止中"}
+            {running ? "Running" : "Stopped"}
           </strong>
         </div>
 
         <label className="control">
-          <span>追加・リセット時の半径</span>
+          <span>r₀</span>
           <input
             type="range"
             min={RS * 1.4}
@@ -513,7 +512,7 @@ function App() {
         </label>
 
         <label className="control">
-          <span>時間倍率</span>
+          <span>Speed</span>
           <input
             type="range"
             min={0.2}
@@ -528,17 +527,17 @@ function App() {
         <div className="metrics">
           <div>
             <CircleDot size={17} />
-            <span>Clock 1 半径</span>
+            <span>r₁</span>
             <strong>{leadClock ? leadClock.state.r.toFixed(3) : "n/a"}</strong>
           </div>
           <div>
             <Crosshair size={17} />
-            <span>4速度規格</span>
+            <span>g(u,u)</span>
             <strong>{Number.isFinite(norm) ? norm.toFixed(4) : "n/a"}</strong>
           </div>
           <div>
             <Grip size={17} />
-            <span>時計数</span>
+            <span>N</span>
             <strong>{clocks.length}</strong>
           </div>
         </div>
@@ -546,9 +545,9 @@ function App() {
         {warningClock && (
           <div className="warning" role="status">
             {warningClock.spacelike &&
-              `${warningClock.name}: 光速を超える世界線になったため、固有時間の増分を0にしています。`}
+              `${warningClock.name}: spacelike path`}
             {warningClock.horizonStop &&
-              `${warningClock.name}: 事象の地平線の直前に到達したため、外部領域で積分を停止しました。`}
+              `${warningClock.name}: horizon stop`}
           </div>
         )}
       </aside>

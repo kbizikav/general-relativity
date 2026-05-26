@@ -1,8 +1,23 @@
 {
   "name": "general-relativity-clock-demo",
   "version": "0.1.0",
+  "description": "Interactive Schwarzschild clock lab for exploring gravitational time dilation, proper time, and free-fall worldlines.",
   "private": true,
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/kbizikav/general-relativity.git"
+  },
+  "homepage": "https://github.com/kbizikav/general-relativity#readme",
+  "keywords": [
+    "general-relativity",
+    "schwarzschild",
+    "time-dilation",
+    "physics-simulation",
+    "react",
+    "vite",
+    "typescript"
+  ],
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc && vite build",
